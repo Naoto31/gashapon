@@ -1,11 +1,15 @@
 /** @format */
-
+import React from "react"
 import type {NextPage} from "next"
 import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
+import {Navbar, Button, Link, Text, Card, Radio} from "@nextui-org/react"
 
 const Home: NextPage = () => {
+  const [variant, setVariant] = React.useState("static")
+  const variants = ["static", "floating", "sticky"]
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,6 +17,22 @@ const Home: NextPage = () => {
         <meta name='description' content='Gashapon' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+
+      <Navbar isBordered>
+        <Navbar.Brand>
+          <Text b color='inherit' hideIn='xs'>
+            Gashapon
+          </Text>
+        </Navbar.Brand>
+
+        <Navbar.Content>
+          <Navbar.Item>
+            <Button auto flat as={Link} href='#'>
+              Connect Wallet
+            </Button>
+          </Navbar.Item>
+        </Navbar.Content>
+      </Navbar>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
