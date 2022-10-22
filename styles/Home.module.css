@@ -47,15 +47,20 @@
   font-size: 4rem;
 }
 
-.title,
-.description {
+.title {
   text-align: center;
 }
 
-.description {
-  margin: 4rem 0;
-  line-height: 1.5;
-  font-size: 1.5rem;
+.img_block {
+  width: 500px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+}
+
+.img_block img {
+  height: 100%;
+  width: 100%;
 }
 
 .code {
@@ -73,6 +78,10 @@
   justify-content: center;
   flex-wrap: wrap;
   max-width: 800px;
+}
+
+.grid button {
+  margin: 0 30px;
 }
 
 .card {

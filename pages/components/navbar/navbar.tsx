@@ -3,20 +3,18 @@
 import React from "react"
 import {Navbar, Button, Link, Text} from "@nextui-org/react"
 
-const NavbarComponent = ({}) => {
+interface AllInOneProps {}
+
+const NavbarComponent: any = ({}) => {
   return (
     <Navbar isBordered variant='floating'>
       <Navbar.Brand>
-        <Text b color='inherit' hideIn='xs'>
-          Gashapon
-        </Text>
+        <Text color='inherit'>Gashapon</Text>
       </Navbar.Brand>
 
       <Navbar.Content>
         <Navbar.Item>
-          <Button auto flat as={Link} href='#'>
-            Connect Wallet
-          </Button>
+          <Button flat>Connect Wallet</Button>
         </Navbar.Item>
       </Navbar.Content>
     </Navbar>
