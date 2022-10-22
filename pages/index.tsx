@@ -7,9 +7,6 @@ import styles from "../styles/Home.module.css"
 import NavbarComponent from "./components/navbar/navbar"
 
 const Home: NextPage = () => {
-  const [variant, setVariant] = React.useState("static")
-  const variants = ["static", "floating", "sticky"]
-
   return (
     <div className={styles.container}>
       <Head>

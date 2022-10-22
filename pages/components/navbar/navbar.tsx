@@ -3,7 +3,7 @@
 import React from "react"
 import {Navbar, Button, Link, Text} from "@nextui-org/react"
 
-const NavbarComponent: any = ({}) => {
+const NavbarComponent = ({}) => {
   return (
     <Navbar isBordered variant='floating'>
       <Navbar.Brand>
