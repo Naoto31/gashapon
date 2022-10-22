@@ -22,7 +22,7 @@ const Home: NextPage = () => {
       <NavbarComponent />
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Let's play Gashapon!</h1>
+        <h1 className={styles.title}>Let us play Gashapon!</h1>
 
         <div className={styles.img_block}>
           <Image src={gashapon_1} alt='img' />
