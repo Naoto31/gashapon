@@ -1,9 +1,7 @@
 /** @format */
 
 import React from "react"
-import {Navbar, Button, Link, Text} from "@nextui-org/react"
-
-interface AllInOneProps {}
+import {Navbar, Button, Text} from "@nextui-org/react"
 
 const NavbarComponent: any = ({}) => {
   return (
