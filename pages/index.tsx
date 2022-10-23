@@ -44,10 +44,10 @@ const Home: NextPage = () => {
           target='_blank'
           rel='noopener noreferrer'
         >
-          Powered by{" "}
-          <span className={styles.logo}>
+          Powered by Naoto & Pung
+          {/* <span className={styles.logo}>
             <Image src='/vercel.svg' alt='Vercel Logo' width={72} height={16} />
-          </span>
+          </span> */}
         </a>
       </footer>
     </div>
