@@ -58,5 +58,31 @@ contract Gashapon_V1 is ERC721URIStorage {
         return _tokenIds.current();
     }
 
-    
+    function createToken(string memory tokenURI, uint256 price) public payable returns (uint) {
+        require(msg.value == listPrice, "Send enough ether to list");
+        require(price > 0, "Make sure the price isn't negative");
+
+        _tokenIds.increment();
+        uint256 currentTokenId = _tokenIds.current();
+        _safeMint(msg.sender, currentTokenId); // this one is already implemented in ERC721
+
+        _setTokenURI(currentTokenId, tokenURI);
+
+        createListedToken(currentTokenId, price);
+
+        return currentTokenId;
+    }
+
+    // this function is called inside smart contract, so it is 'private' function
+    function createListedToken(uint256 tokenId, uint256 price) private {
+        idToListedToken[tokenId] = ListedToken(
+            tokenId,
+            payable(address(this)),
+            payable(msg.sender),
+            price,
+            true // this is true for default to make it simple, but we can make it optional in the future
+        );
+
+        _transfer(msg.sender, address(this), tokenId); // transfer NFT's ownership to this smart contract, otherwise we need approve function
+    }
 }
