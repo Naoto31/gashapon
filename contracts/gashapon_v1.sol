@@ -14,7 +14,7 @@ contract Gashapon_V1 is ERC721URIStorage {
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
 
-    uint256 listPrice = 0.001 ether; // this is needed when users list their own NFT to market place
+    uint256 listPrice = 0.0005 ether; // this is needed when users list their own NFT to market place
 
     constructor() ERC721("Gashapon_V1", "GASHA") {
         owner = payable(msg.sender);
@@ -84,5 +84,66 @@ contract Gashapon_V1 is ERC721URIStorage {
         );
 
         _transfer(msg.sender, address(this), tokenId); // transfer NFT's ownership to this smart contract, otherwise we need approve function
+    }
+
+    function getAllNFTs() public view returns(ListedToken[] memory) {
+        uint nftCount = _tokenIds.current();
+
+        ListedToken[] memory tokens = new ListedToken[](nftCount);
+
+        uint currentIndex = 0;
+
+        for (uint i = 0; i < nftCount; i++) {
+            uint currentId = i + 1;
+            ListedToken storage currentItem = idToListedToken[currentId];
+            tokens[currentIndex] = currentItem;
+            currentIndex += 1;
+        }
+
+        return tokens;
+    }
+
+    function getMyNFTs() public view returns (ListedToken[] memory) {
+        uint totalItemCount = _tokenIds.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+        uint currentId;
+
+        //Important to get a count of all the NFTs that belong to the user before we can make an array for them
+        for(uint i=0; i < totalItemCount; i++)
+        {
+            if(idToListedToken[i+1].owner == msg.sender || idToListedToken[i+1].seller == msg.sender){
+                itemCount += 1;
+            }
+        }
+
+        //Once you have the count of relevant NFTs, create an array then store all the NFTs in it
+        ListedToken[] memory items = new ListedToken[](itemCount);
+        for(uint i=0; i < totalItemCount; i++) {
+            if(idToListedToken[i+1].owner == msg.sender || idToListedToken[i+1].seller == msg.sender) {
+                currentId = i+1;
+                ListedToken storage currentItem = idToListedToken[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+    function executeSale(uint256 tokenId) public payable {
+        uint price = idToListedToken[tokenId].price;
+        require(msg.value == price, "Please submit the asking price for the NFT in order to purchase");
+
+        address seller = idToListedToken[tokenId].seller;
+
+        idToListedToken[tokenId].currentlyListed = true; // you can change this to false so it won't be displayed on the market place. 
+        idToListedToken[tokenId].seller = payable(msg.sender);
+
+        _transfer((address(this)), msg.sender, tokenId);
+
+        approve(address(this), tokenId); // you can actually approve that the bought NFT is owned by this contract, so we can easily put in sales again.
+
+        payable(owner).transfer(listPrice); // smart contract owner gets listing price (commision)
+        payable(seller).transfer(msg.value); // seller get money 
     }
 }
