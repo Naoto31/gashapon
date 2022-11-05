@@ -27,4 +27,36 @@ contract Gashapon_V1 is ERC721URIStorage {
         uint256 price;
         bool currentlyListed;   
     }
+
+    // This mapping maps tokenId to token info and is helpful when retrieving details about a tokenId
+    mapping(uint256 => ListedToken) private idToListedToken;
+
+    // update listing price, without this you cannot increase it after deploying smart contract
+    function updateListPrice(uint256 _listPrice) public payable {
+       require(owner == msg.sender, "Only owner can update listing price");
+        listPrice = _listPrice;
+    }
+
+    // to check current listing price
+    function getListPrice() public view returns (uint256) {
+        return listPrice;
+    }
+
+    // get latest token
+    function getLatestIdToListedToken() public view returns (ListedToken memory) {
+        uint256 currentTokenId = _tokenIds.current();
+        return idToListedToken[currentTokenId];
+    }
+
+    // get certain token by tokenId
+    function getListedForTokenId(uint256 tokenId) public view returns (ListedToken memory) {
+        return idToListedToken[tokenId];
+    }
+
+    // get current tokenId
+    function getCurrentToken() public view returns (uint256) {
+        return _tokenIds.current();
+    }
+
+    
 }
