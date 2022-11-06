@@ -119,6 +119,7 @@ const Home: NextPage = () => {
     return toggle(!show)
   }
 
+  // should choose one of NFTs that are not owned by the player
   async function play() {
     try {
       const ethers = require("ethers")
