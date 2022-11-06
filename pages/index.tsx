@@ -134,6 +134,13 @@ const Home: NextPage = () => {
       //run the executeSale function
       const count = await contract.getCurrentToken()
       const randomTokenId = Math.floor(Math.random() * count + 1) // should use chainlink in the future / production
+      const nft = await contract.getListedForTokenId(randomTokenId)
+      const playerAddress = await signer.getAddress()
+      if (nft.seller === playerAddress) {
+        console.log("This NFT is yours") // this should be MODIFIED.
+        play()
+        return
+      }
       let transaction = await contract.executeSale(randomTokenId, {value: salePrice})
       await transaction.wait()
 

@@ -59,7 +59,7 @@
 }
 
 .marketplace_container {
-  height: 400px;
+  min-height: 400px;
   width: 1000px;
 }
 
