@@ -35,20 +35,23 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## For Tokyo web3 Hackathon
+# For Tokyo web3 Hackathon
 
-今回時間内に全ての工程を終わらせることができなかったので、ホワイトペーパー(最終的な仕様)を以下に英語で述べております。
+今回は、最終目標までの開発を終わらせることができなかったので、ホワイトペーパー(最終的な仕様)を以下に英語で述べております。
 
-現状での操作は、
+## 現状での仕様:
 
-- ガシャポンに画像をアップロードし、NFT としてプールに入れる。(opensea の API を用いた NFT の引き入れが困難)
-- Play Gashapon ボタンをクリックし、自分以外の NFT がランダムで購入可能。(最終的には、このランダムを Chainlink を用いて実装予定です)
-- 価格設定までは行えず、現状は Listing price, sell price 共に 0.001 eth 固定です。(sell price 設定できますが、実際は 0.001 とハードコーディングしています。)
-- 自分の所有している NFT を profile にて閲覧可能。
+- メタマスクで Goerli test network に繋げる。
+- ガシャポンの画像をクリックすることで、プール内の NFT を閲覧可能。
+- ガシャポンに画像をアップロードし、NFT としてプールに入れる。
+- この時のデータは、pinata に保存しております。
+- Play Gashapon ボタンをクリックし、自分以外の NFT をランダムで購入可能。(最終的には、このランダムを Chainlink を用いて実装予定です)
+- 時間がなかった為、価格は Listing price, sell price 共に 0.001 eth 固定としております。(Add NFT の際に sell price を設定できますが、実際は 0.001 とハードコーディングしています。)
+- 自分が所有している NFT を profile にて閲覧可能。
 
-現状の課題:
+## 課題:
 
-- ユーザーが自分で NFT を入れられる為、入れたもの勝ちになってしまう恐れがあるので、やはり Opensea のようなマーケットプレイスからランダムで NFT データを抽出できればと考えております。(例えば 0.1 eth 以下の NFT を 999 個、1 eth の NFT を一個クエリし、ガシャポンに入れる。)
+- ユーザーが自分で NFT を入れられる為、入れたもの勝ちになってしまう恐れがあるので、やはり Opensea のようなマーケットプレイスからランダムで NFT データを抽出できればと考えております。(例えば 0.15 eth 以下の NFT を 999 個、1 eth の NFT を一個クエリし、ガシャポンに入れる。ワンプレイ 0.2 eth と設定する。)
 - 今回は Opensea の API による価格範囲指定でのクエリ方法が見つけられなかった為、今後は(Opensea に限らず)マーケットプレイスからのクエリを実現したい。
 
 # Whitepaper
