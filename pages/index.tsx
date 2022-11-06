@@ -114,7 +114,7 @@ const Home: NextPage = () => {
       updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
       //run the executeSale function
       const count = await contract.getCurrentToken()
-      const randomTokenId = Math.floor(Math.random() * count + 1)
+      const randomTokenId = Math.floor(Math.random() * count + 1) // should use chainlink in the future / production
       let transaction = await contract.executeSale(randomTokenId, {value: salePrice})
       await transaction.wait()
 
