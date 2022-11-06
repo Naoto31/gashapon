@@ -43,7 +43,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 今回は、マーケットプレイスからのクエリが困難で実現できなかったため、現状での使用と、ホワイトペーパー(最終的な仕様)を以下に英語で述べております。
 
-## 現状での仕様:
+## 使用した tech stacks
+
+- react
+- Next.js
+- hardhat
+- pinata
+
+## 使用した Blockchain
+
+- Ethereum
+
+## deploy した Contract
+
+- contracts/gashapon_v1.sol
+
+## 現状での仕様 (プレイ方法):
 
 - メタマスクで Goerli test network に繋げる。
 - ガシャポンの画像をクリックすることで、プール内の NFT を閲覧可能。
