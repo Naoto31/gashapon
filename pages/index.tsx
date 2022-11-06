@@ -101,7 +101,29 @@ const Home: NextPage = () => {
     return toggle(!show)
   }
 
-  function play() {}
+  async function play() {
+    try {
+      const ethers = require("ethers")
+      //After adding your Hardhat network to your metamask, this code will get providers and signers
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const signer = provider.getSigner()
+
+      //Pull the deployed contract instance
+      let contract = new ethers.Contract(Gashapon_V1.address, Gashapon_V1.abi, signer)
+      const salePrice = ethers.utils.parseUnits("0.001", "ether") // this will be defined later, but for now every nft costs 0.001
+      updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
+      //run the executeSale function
+      const count = await contract.getCurrentToken()
+      const randomTokenId = Math.floor(Math.random() * count + 1)
+      let transaction = await contract.executeSale(randomTokenId, {value: salePrice})
+      await transaction.wait()
+
+      alert("You successfully bought the NFT!")
+      updateMessage("")
+    } catch (e) {
+      alert("Upload Error" + e)
+    }
+  }
 
   return (
     <div className={styles.container}>
