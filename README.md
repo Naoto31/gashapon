@@ -37,7 +37,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 # For Tokyo web3 Hackathon
 
-今回は、最終目標までの開発を終わらせることができなかったので、ホワイトペーパー(最終的な仕様)を以下に英語で述べております.
+今回は、最終目標までの開発を終わらせることができなかったので、ホワイトペーパー(最終的な仕様)を以下に英語で述べております。
 
 ## 現状での仕様:
 
