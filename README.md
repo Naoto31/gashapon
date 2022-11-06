@@ -65,7 +65,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - For player, I want to discover a new NFT projects
 - For player, I cannot afford 50ETH bored ape
-- For unpopular creator/project, there’s more chance that it gets exposure
+- For unknown/unpopular creator/project, there’s more chance that it gets exposure
 
 ## Mechanics
 
