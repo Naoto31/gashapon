@@ -6,11 +6,13 @@ import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import gashapon_1 from "assets/gashapon_1.png"
 import dynamic from "next/dynamic"
-import {Button, Modal, Text} from "@nextui-org/react"
+import {Button, Card, Grid, Modal, Row, Text} from "@nextui-org/react"
 import {uploadFileToIPFS, uploadJSONToIPFS} from "../pinata"
 import Gashapon_V1 from "../Gashapon_V1.json"
 import MarketplaceComponent from "./components/marketplace/marketplace"
 import * as ethers from "ethers"
+import axios from "axios"
+import {useParams} from "react-router"
 
 const NavbarComponent = dynamic(() => import("./components/navbar/navbar"), {ssr: false}) // to avoid warning, we need to use dynamic
 
@@ -21,6 +23,16 @@ const Home: NextPage = () => {
   }
   const closeHandler = () => {
     setVisible(false)
+  }
+
+  const [showProfile, setProfileVisible] = React.useState(false)
+
+  const openProfile = () => {
+    setProfileVisible(true)
+  }
+
+  const close = () => {
+    setProfileVisible(false)
   }
 
   const [formParams, updateFormParams] = useState({name: "", description: "", price: ""})
@@ -125,6 +137,62 @@ const Home: NextPage = () => {
     }
   }
 
+  const [data, updateData] = useState([] as any[])
+  const [dataFetched, updateFetched] = useState(false)
+  const [address, updateAddress] = useState("0x")
+  const [totalPrice, updateTotalPrice] = useState("0")
+
+  async function getNFTData(tokenId) {
+    const ethers = require("ethers")
+    let sumPrice = 0
+    //After adding your Hardhat network to your metamask, this code will get providers and signers
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const addr = await signer.getAddress()
+
+    //Pull the deployed contract instance
+    let contract = new ethers.Contract(Gashapon_V1.address, Gashapon_V1.abi, signer)
+
+    //create an NFT Token
+    let transaction = await contract.getMyNFTs()
+
+    /*
+     * Below function takes the metadata from tokenURI and the data returned by getMyNFTs() contract function
+     * and creates an object of information that is to be displayed
+     */
+    const items = await Promise.all(
+      transaction.map(async (i: any) => {
+        const tokenURI = await contract.tokenURI(i.tokenId)
+        let meta = await axios.get(tokenURI)
+        const data: {name: string; image: string; description: string} = meta.data
+
+        let price = ethers.utils.formatUnits(i.price.toString(), "ether")
+        let item = {
+          price,
+          tokenId: i.tokenId.toNumber(),
+          seller: i.seller,
+          owner: i.owner,
+          image: data.image,
+          name: data.name,
+          description: data.description,
+        }
+        sumPrice += Number(price)
+        return item
+      })
+    )
+
+    updateData(items)
+    updateFetched(true)
+    updateAddress(addr)
+    updateTotalPrice(sumPrice.toPrecision(3))
+  }
+
+  const params = useParams()
+  const tokenId = params.tokenId
+  if (!dataFetched) {
+    getNFTData(tokenId)
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -162,6 +230,10 @@ const Home: NextPage = () => {
 
           <Button auto color='secondary' flat shadow onClick={handler}>
             Add NFT
+          </Button>
+
+          <Button auto color='warning' flat shadow onClick={openProfile}>
+            Profile
           </Button>
         </div>
 
@@ -253,6 +325,97 @@ const Home: NextPage = () => {
             </Button>
             <Button auto onClick={listNFT}>
               List your NFT
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          closeButton
+          blur
+          width='800px'
+          aria-labelledby='modal-title'
+          open={showProfile}
+          onClose={close}
+        >
+          <Modal.Header>
+            <Text id='modal-title' size={18}>
+              Wallet Address
+              <br></br>
+              <Text b size={18}>
+                {address}
+              </Text>
+            </Text>
+          </Modal.Header>
+          <Modal.Body>
+            <div className='flex flex-row text-center justify-center mt-10 md:text-2xl text-white'>
+              <div>
+                <h2 className='font-bold'>No. of NFTs</h2>
+                {data.length}
+              </div>
+              <div className='ml-20'>
+                <h2 className='font-bold'>Total Value</h2>
+                {totalPrice} ETH
+              </div>
+            </div>
+            <div className='flex flex-col text-center items-center mt-11 text-white'>
+              <h2 className='font-bold'>Your NFTs</h2>
+              <div className='flex justify-center flex-wrap max-w-screen-xl'>
+                <Grid.Container gap={2} justify='flex-start'>
+                  {data.map((item, index) => (
+                    <Grid xs={6} sm={3} key={index}>
+                      <Card isPressable>
+                        <Card.Body css={{p: 0}}>
+                          <Card.Image
+                            src={item.image}
+                            objectFit='cover'
+                            width='100%'
+                            height={140}
+                            alt={item.name}
+                            // onClick={() => {
+                            //   handle(item, index)
+                            //   handler(index)
+                            // }}
+                          />
+                        </Card.Body>
+                        <Card.Footer css={{justifyItems: "flex-start"}}>
+                          <Row wrap='wrap' justify='space-between' align='center'>
+                            <Text b>{item.name}</Text>
+                            <Text
+                              css={{
+                                color: "$accents7",
+                                fontWeight: "$semibold",
+                                fontSize: "$sm",
+                              }}
+                            >
+                              {item.price}
+                            </Text>
+                          </Row>
+                        </Card.Footer>
+                      </Card>
+                      {/* <OneNftComponent
+            show={visible?.show?.[modalData?.index] === true}
+            data={{
+              name: modalData?.name,
+              image: modalData?.image,
+              description: modalData?.description,
+              price: modalData?.price,
+            }}
+          /> */}
+                    </Grid>
+                  ))}
+                </Grid.Container>
+              </div>
+              <div className='mt-10 text-xl'>
+                {data.length == 0
+                  ? "Oops, No NFT data to display (Are you logged in?)"
+                  : ""}
+              </div>
+            </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button auto flat color='error' onClick={close}>
+              Close
             </Button>
           </Modal.Footer>
         </Modal>
