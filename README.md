@@ -39,34 +39,41 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 今回時間内に全ての工程を終わらせることができなかったので、ホワイトペーパー(最終的な仕様)を以下に英語で述べております。
 
-現状での操作は、　
-・ガシャポンに画像をアップロードし、NFT としてプールに入れる。(opensea の API を用いた NFT の引き入れが困難)
-・Play Gashapon ボタンをクリックし、自分以外の NFT がランダムで購入可能。(最終的には、このランダムを Chainlink を用いて実装予定です)
-・自分の所有している NFT を profile にて閲覧可能。
+現状での操作は、
 
-## Whitepaper
+- ガシャポンに画像をアップロードし、NFT としてプールに入れる。(opensea の API を用いた NFT の引き入れが困難)
+- Play Gashapon ボタンをクリックし、自分以外の NFT がランダムで購入可能。(最終的には、このランダムを Chainlink を用いて実装予定です)
+- 価格設定までは行えず、現状は Listing price, sell price 共に 0.001 eth 固定です。(sell price 設定できますが、実際は 0.001 とハードコーディングしています。)
+- 自分の所有している NFT を profile にて閲覧可能。
 
-# What is Gashapon?
+現状の課題:
+
+- ユーザーが自分で NFT を入れられる為、入れたもの勝ちになってしまう恐れがあるので、やはり Opensea のようなマーケットプレイスからランダムで NFT データを抽出できればと考えております。(例えば 0.1 eth 以下の NFT を 999 個、1 eth の NFT を一個クエリし、ガシャポンに入れる。)
+- 今回は Opensea の API による価格範囲指定でのクエリ方法が見つけられなかった為、今後は(Opensea に限らず)マーケットプレイスからのクエリを実現したい。
+
+# Whitepaper
+
+## What is Gashapon?
 
 - A pool of 999 cheap NFT + 1 Rare NFT. Player comes and pay an affordable fix fee and they have a chance to win some NFT and a rare one
 - The basic idea that it’s like lootboxes where you can get packs of NFTs
 
-# The problem that we are solving
+## The problem that we are solving
 
 - For player, I want to discover a new NFT projects
 - For player, I cannot afford 50ETH bored ape
 - For unpopular creator/project, there’s more chance that it gets exposure
 
-# Mechanics
+## Mechanics
 
 - We randomly take 999 NFTs from opensea from the Cheap price range and then randomly get 1 NFT from the expensive price range. When user comes and play, and let say, they got the cheap price range, then we will have 998 + 1. Then we top up the cheap one so it becomes 999 + 1 again
 
-# Technical
+## Technical
 
 - The contract should be able to **randomly** get 999 cheap NFT from openseas when first deployed
 - The contract should be able to **randomly** get 1 rare NFT from opeanseas when first deployed
 - When player pay the fee and they get the cheap one, the contract also should excecute that it buys the cheap NFT, to top up the pool so that it’s 999+1 again (same goes with the case when player wins the expensive one, the contract should have enough money to buy the expensive one)
 
-# Gashapon architect stack
+## Gashapon architect stack
 
 ![alt text](./assets/gashapon_stack.jpeg)
