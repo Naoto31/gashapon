@@ -101,6 +101,8 @@ const Home: NextPage = () => {
     return toggle(!show)
   }
 
+  function play() {}
+
   return (
     <div className={styles.container}>
       <Head>
@@ -132,7 +134,7 @@ const Home: NextPage = () => {
         )}
 
         <div className={styles.grid}>
-          <Button auto color='gradient'>
+          <Button auto color='gradient' onClick={play}>
             Play Gashapon
           </Button>
 
