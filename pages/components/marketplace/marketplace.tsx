@@ -6,7 +6,7 @@ import Gashapon_V1 from "../../../Gashapon_V1.json"
 import {useState} from "react"
 
 const MarketplaceComponent: any = ({}) => {
-  const [data, updateData] = useState([])
+  const [data, updateData] = useState([] as any[])
   const [dataFetched, updateFetched] = useState(false)
 
   async function getAllNFTs() {
@@ -20,11 +20,11 @@ const MarketplaceComponent: any = ({}) => {
     let transaction = await contract.getAllNFTs()
 
     //Fetch all the details of every NFT from the contract and display
-    const items = await Promise.all(
-      transaction.map(async i => {
+    const items: any[] = await Promise.all(
+      transaction.map(async (i: any) => {
         const tokenURI = await contract.tokenURI(i.tokenId)
         let meta = await axios.get(tokenURI)
-        meta = meta.data
+        const data: {name: string; image: string; description: string} = meta.data
 
         let price = ethers.utils.formatUnits(i.price.toString(), "ether")
         let item = {
@@ -32,9 +32,9 @@ const MarketplaceComponent: any = ({}) => {
           tokenId: i.tokenId.toNumber(),
           seller: i.seller,
           owner: i.owner,
-          image: meta.image,
-          name: meta.name,
-          description: meta.description,
+          image: data.image,
+          name: data.name,
+          description: data.description,
         }
         return item
       })
