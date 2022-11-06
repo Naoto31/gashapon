@@ -1,5 +1,5 @@
 /** @format */
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import type {NextPage} from "next"
 import Head from "next/head"
 import Image from "next/image"
@@ -17,6 +17,8 @@ import {useParams} from "react-router"
 const NavbarComponent = dynamic(() => import("./components/navbar/navbar"), {ssr: false}) // to avoid warning, we need to use dynamic
 
 const Home: NextPage = () => {
+  const [connected, toggleConnect] = useState(false)
+
   const [visible, setVisible] = React.useState(false)
   const handler = () => {
     setVisible(true)
@@ -110,6 +112,10 @@ const Home: NextPage = () => {
 
   let [show, toggle] = useState(false)
   const toggleButton = () => {
+    if (!connected) {
+      alert("Please connect your wallet")
+      return
+    }
     return toggle(!show)
   }
 
@@ -142,14 +148,14 @@ const Home: NextPage = () => {
   const [address, updateAddress] = useState("0x")
   const [totalPrice, updateTotalPrice] = useState("0")
 
-  async function getNFTData(tokenId) {
+  async function getNFTData() {
     const ethers = require("ethers")
     let sumPrice = 0
     //After adding your Hardhat network to your metamask, this code will get providers and signers
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const signer = provider.getSigner()
+    if (!connected) return
     const addr = await signer.getAddress()
-
     //Pull the deployed contract instance
     let contract = new ethers.Contract(Gashapon_V1.address, Gashapon_V1.abi, signer)
 
@@ -190,8 +196,44 @@ const Home: NextPage = () => {
   const params = useParams()
   const tokenId = params.tokenId
   if (!dataFetched) {
-    getNFTData(tokenId)
+    getNFTData()
   }
+
+  async function getAddress() {
+    const ethers = require("ethers")
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    try {
+      const signer = provider.getSigner()
+      const addr = await signer.getAddress()
+      updateAddress(addr)
+    } catch (e) {
+      console.log("no account is connected")
+      return false
+    }
+    return true
+  }
+
+  useEffect(() => {
+    let val = window.ethereum.isConnected() // In details, this function refers if the provider can make RPC requests to the current chain.
+    if (val) {
+      // declare the data fetching function
+      const fetch = async () => {
+        const hasAddress = await getAddress()
+        if (hasAddress) {
+          toggleConnect(val)
+        }
+      }
+
+      // call the function
+      fetch()
+        // make sure to catch any error
+        .catch(console.error)
+    }
+
+    window.ethereum.on("accountsChanged", () => {
+      window.location.replace(location.pathname)
+    })
+  }, [])
 
   return (
     <div className={styles.container}>

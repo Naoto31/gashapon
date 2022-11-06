@@ -1,7 +1,7 @@
 /** @format */
 
 import axios from "axios"
-import {Card, Grid, Row, Text} from "@nextui-org/react"
+import {Button, Card, Grid, Row, Text} from "@nextui-org/react"
 import Gashapon_V1 from "../../../Gashapon_V1.json"
 import React, {useState} from "react"
 // import OneNftComponent from "../modals/oneNft"
@@ -9,12 +9,17 @@ import React, {useState} from "react"
 const MarketplaceComponent: any = ({}) => {
   const [data, updateData] = useState([] as any[])
   const [dataFetched, updateFetched] = useState(false)
+  const [addr, updateAddress] = useState("0x")
 
   async function getAllNFTs() {
     const ethers = require("ethers")
     //After adding your Hardhat network to your metamask, this code will get providers and signers
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const signer = provider.getSigner()
+
+    const addr = await signer.getAddress()
+    updateAddress(addr)
+
     //Pull the deployed contract instance
     let contract = new ethers.Contract(Gashapon_V1.address, Gashapon_V1.abi, signer)
     //create an NFT Token
@@ -86,6 +91,15 @@ const MarketplaceComponent: any = ({}) => {
             <Card.Footer css={{justifyItems: "flex-start"}}>
               <Row wrap='wrap' justify='space-between' align='center'>
                 <Text b>{item.name}</Text>
+
+                {addr === item.seller ? (
+                  <Button color='success' auto>
+                    Yours
+                  </Button>
+                ) : (
+                  ""
+                )}
+
                 <Text
                   css={{color: "$accents7", fontWeight: "$semibold", fontSize: "$sm"}}
                 >
