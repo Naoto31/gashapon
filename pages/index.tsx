@@ -96,9 +96,9 @@ const Home: NextPage = () => {
     }
   }
 
-  let [hide, toggle] = useState(false)
+  let [show, toggle] = useState(false)
   const toggleButton = () => {
-    return toggle(!hide)
+    return toggle(!show)
   }
 
   return (
@@ -123,12 +123,12 @@ const Home: NextPage = () => {
           />
         </div>
 
-        {hide ? (
-          ""
-        ) : (
+        {show ? (
           <div className={styles.marketplace_container}>
             <MarketplaceComponent />
           </div>
+        ) : (
+          ""
         )}
 
         <div className={styles.grid}>
