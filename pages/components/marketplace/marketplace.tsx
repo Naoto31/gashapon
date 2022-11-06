@@ -3,7 +3,8 @@
 import axios from "axios"
 import {Card, Grid, Row, Text} from "@nextui-org/react"
 import Gashapon_V1 from "../../../Gashapon_V1.json"
-import {useState} from "react"
+import React, {useState} from "react"
+// import OneNftComponent from "../modals/oneNft"
 
 const MarketplaceComponent: any = ({}) => {
   const [data, updateData] = useState([] as any[])
@@ -45,6 +46,25 @@ const MarketplaceComponent: any = ({}) => {
 
   if (!dataFetched) getAllNFTs()
 
+  // const [visible, setVisible] = React.useState({} as any)
+  // const handler = (index: any) => {
+  //   setVisible({
+  //     show: {
+  //       [index]: true,
+  //     },
+  //   })
+  // }
+
+  // const [modalData, setModalData] = useState(null)
+
+  // const handle = (data: any, index: number) => {
+  //   console.log(data)
+  //   setModalData({
+  //     ...data,
+  //     index: index,
+  //   })
+  // }
+
   return (
     <Grid.Container gap={2} justify='flex-start'>
       {data.map((item, index) => (
@@ -57,6 +77,10 @@ const MarketplaceComponent: any = ({}) => {
                 width='100%'
                 height={140}
                 alt={item.name}
+                // onClick={() => {
+                //   handle(item, index)
+                //   handler(index)
+                // }}
               />
             </Card.Body>
             <Card.Footer css={{justifyItems: "flex-start"}}>
@@ -70,6 +94,15 @@ const MarketplaceComponent: any = ({}) => {
               </Row>
             </Card.Footer>
           </Card>
+          {/* <OneNftComponent
+            show={visible?.show?.[modalData?.index] === true}
+            data={{
+              name: modalData?.name,
+              image: modalData?.image,
+              description: modalData?.description,
+              price: modalData?.price,
+            }}
+          /> */}
         </Grid>
       ))}
     </Grid.Container>
