@@ -203,7 +203,8 @@ const Home: NextPage = () => {
 
   const params = useParams()
   const tokenId = params.tokenId
-  if (!dataFetched) {
+
+  if (!dataFetched && connected) {
     getNFTData()
   }
 
@@ -214,8 +215,10 @@ const Home: NextPage = () => {
       const signer = provider.getSigner()
       const addr = await signer.getAddress()
       updateAddress(addr)
+      toggleConnect(true)
     } catch (e) {
       console.log("no account is connected")
+      toggleConnect(false)
       return false
     }
     return true
@@ -225,17 +228,19 @@ const Home: NextPage = () => {
     let val = window.ethereum.isConnected() // In details, this function refers if the provider can make RPC requests to the current chain.
     if (val) {
       // declare the data fetching function
-      const fetch = async () => {
-        const hasAddress = await getAddress()
-        if (hasAddress) {
-          toggleConnect(val)
-        }
-      }
+      // const fetch = async () => {
+      //   const hasAddress = await getAddress()
+      //   if (hasAddress) {
+      //     toggleConnect(val)
+      //   }
+      // }
 
+      getAddress()
+      toggleConnect(connected)
       // call the function
-      fetch()
-        // make sure to catch any error
-        .catch(console.error)
+      // fetch()
+      //   // make sure to catch any error
+      //   .catch(console.error)
     }
 
     window.ethereum.on("accountsChanged", () => {
