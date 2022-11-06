@@ -58,6 +58,11 @@
   align-items: center;
 }
 
+.marketplace_container {
+  height: 400px;
+  width: 1000px;
+}
+
 .img_block img {
   height: 100%;
   width: 100%;
