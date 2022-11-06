@@ -9,23 +9,23 @@ import dynamic from "next/dynamic"
 import {Button, Modal, Text} from "@nextui-org/react"
 import {uploadFileToIPFS, uploadJSONToIPFS} from "../pinata"
 import Gashapon_V1 from "../Gashapon_V1.json"
+import MarketplaceComponent from "./components/marketplace/marketplace"
+import * as ethers from "ethers"
 
 const NavbarComponent = dynamic(() => import("./components/navbar/navbar"), {ssr: false}) // to avoid warning, we need to use dynamic
 
 const Home: NextPage = () => {
   const [visible, setVisible] = React.useState(false)
   const handler = () => {
-    console.log("clicked")
     setVisible(true)
   }
   const closeHandler = () => {
     setVisible(false)
-    console.log("closed")
   }
 
   const [formParams, updateFormParams] = useState({name: "", description: "", price: ""})
   const [fileURL, setFileURL] = useState(null)
-  const ethers = require("ethers")
+  // const ethers = require("ethers")
   const [message, updateMessage] = useState("")
   // const location = useLocation()
 
@@ -45,10 +45,8 @@ const Home: NextPage = () => {
 
   async function uploadMetadataToIPFS() {
     const {name, description, price} = formParams
-
-    if (!name || !description || !price || !fileURL) {
-      return
-    }
+    //Make sure that none of the fields are empty
+    if (!name || !description || !price || !fileURL) return
 
     const nftJSON = {
       name,
@@ -58,28 +56,29 @@ const Home: NextPage = () => {
     }
 
     try {
+      //upload the metadata JSON to IPFS
       const response = await uploadJSONToIPFS(nftJSON)
       if (response.success === true) {
         console.log("Uploaded JSON to Pinata: ", response)
         return response.pinataURL
       }
     } catch (e) {
-      console.log(e)
+      console.log("error uploading JSON metadata:", e)
     }
   }
 
   async function listNFT(e: any) {
-    e.preventDefault()
+    //    e.preventDefault()
 
     try {
       const metadataURL = await uploadMetadataToIPFS()
-      const provider = new ethers.providers.Web3Provider(Window.ethereum) // should fix the error
+      const provider = new ethers.providers.Web3Provider(window.ethereum) // should fix the error
       const signer = provider.getSigner()
 
       updateMessage("Please wait ... uploading (up to 5mins)")
 
       let contract = new ethers.Contract(Gashapon_V1.address, Gashapon_V1.abi, signer)
-      const price = ethers.utils.parseUnit(formParams.price, "ether")
+      const price = ethers.utils.parseUnits(formParams.price, "ether")
       let listingPrice = await contract.getListPrice()
       listingPrice = listingPrice.toString()
 
@@ -97,6 +96,11 @@ const Home: NextPage = () => {
     }
   }
 
+  let [hide, toggle] = useState(false)
+  const toggleButton = () => {
+    return toggle(!hide)
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -111,8 +115,21 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>Let us play Gashapon!</h1>
 
         <div className={styles.img_block}>
-          <Image src={gashapon_1} alt='img' />
+          <Image
+            style={{cursor: "pointer"}}
+            src={gashapon_1}
+            alt='img'
+            onClick={toggleButton}
+          />
         </div>
+
+        {hide ? (
+          ""
+        ) : (
+          <div className={styles.marketplace_container}>
+            <MarketplaceComponent />
+          </div>
+        )}
 
         <div className={styles.grid}>
           <Button auto color='gradient'>
@@ -187,8 +204,8 @@ const Home: NextPage = () => {
                 <input
                   className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                   type='number'
-                  placeholder='Min 0.01 ETH'
-                  step='0.01'
+                  placeholder='Min 0.001 ETH'
+                  step='0.001'
                   value={formParams.price}
                   onChange={e => updateFormParams({...formParams, price: e.target.value})}
                 ></input>
