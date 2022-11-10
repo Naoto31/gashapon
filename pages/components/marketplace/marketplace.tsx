@@ -4,6 +4,7 @@ import axios from "axios"
 import {Button, Card, Grid, Row, Text} from "@nextui-org/react"
 import Gashapon_V1 from "../../../Gashapon_V1.json"
 import React, {useState} from "react"
+import OneNftComponent from "../modals/oneNft"
 // import OneNftComponent from "../modals/oneNft"
 
 const MarketplaceComponent: any = ({}) => {
@@ -51,24 +52,24 @@ const MarketplaceComponent: any = ({}) => {
 
   if (!dataFetched) getAllNFTs()
 
-  // const [visible, setVisible] = React.useState({} as any)
-  // const handler = (index: any) => {
-  //   setVisible({
-  //     show: {
-  //       [index]: true,
-  //     },
-  //   })
-  // }
+  const [visible, setVisible] = React.useState({} as any)
+  const handler = (index: any) => {
+    setVisible({
+      show: {
+        [index]: true,
+      },
+    })
+  }
 
-  // const [modalData, setModalData] = useState(null)
+  const [modalData, setModalData] = useState(null)
 
-  // const handle = (data: any, index: number) => {
-  //   console.log(data)
-  //   setModalData({
-  //     ...data,
-  //     index: index,
-  //   })
-  // }
+  const showDetail = (data: any, index: number, show: boolean) => {
+    setModalData({
+      ...data,
+      index: index,
+      show: show,
+    })
+  }
 
   return (
     <Grid.Container gap={2} justify='flex-start'>
@@ -82,10 +83,9 @@ const MarketplaceComponent: any = ({}) => {
                 width='100%'
                 height={140}
                 alt={item.name}
-                // onClick={() => {
-                //   handle(item, index)
-                //   handler(index)
-                // }}
+                onClick={() => {
+                  showDetail(item, index, true)
+                }}
               />
             </Card.Body>
             <Card.Footer css={{justifyItems: "flex-start"}}>
@@ -108,17 +108,21 @@ const MarketplaceComponent: any = ({}) => {
               </Row>
             </Card.Footer>
           </Card>
-          {/* <OneNftComponent
-            show={visible?.show?.[modalData?.index] === true}
-            data={{
-              name: modalData?.name,
-              image: modalData?.image,
-              description: modalData?.description,
-              price: modalData?.price,
-            }}
-          /> */}
         </Grid>
       ))}
+
+      {modalData?.show && (
+        <OneNftComponent
+          data={{
+            name: modalData?.name,
+            image: modalData?.image,
+            description: modalData?.description,
+            price: modalData?.price,
+          }}
+          show={modalData?.show}
+          showDetail={showDetail}
+        />
+      )}
     </Grid.Container>
   )
 }
