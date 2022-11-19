@@ -26,7 +26,7 @@ const OneNftComponent = (props: {
         <Text color='#363449'>test</Text>
       </Modal.Header>
       <Modal.Body>
-        <Image showSkeleton src={props.data.image} width={400} height={490} />
+        <Image showSkeleton src={props.data?.image} width={400} height={490} />
       </Modal.Body>
     </Modal>
   )
