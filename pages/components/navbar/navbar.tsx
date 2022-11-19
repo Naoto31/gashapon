@@ -17,6 +17,7 @@ const NavbarComponent: any = ({}) => {
       updateAddress(addr)
     } catch (e) {
       console.log("no account is connected")
+      console.log("test")
       return false
     }
     return true
