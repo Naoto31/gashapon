@@ -6,7 +6,7 @@ import React, {useEffect, useState} from "react"
 const OneNftComponent = (props: {
   data: {name: string; price: string; description: string; image: string}
   show: boolean
-  showDetail
+  showDetail: any
 }) => {
   const [visible, setVisible] = useState<boolean | null>(null)
 
