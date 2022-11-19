@@ -225,7 +225,7 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-    let val = window.ethereum.isConnected() // In details, this function refers if the provider can make RPC requests to the current chain.
+    let val = window?.ethereum?.isConnected() // In details, this function refers if the provider can make RPC requests to the current chain.
     if (val) {
       // declare the data fetching function
       // const fetch = async () => {
@@ -243,7 +243,7 @@ const Home: NextPage = () => {
       //   .catch(console.error)
     }
 
-    window.ethereum.on("accountsChanged", () => {
+    window?.ethereum?.on("accountsChanged", () => {
       window.location.replace(location.pathname)
     })
   }, [])
