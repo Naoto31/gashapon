@@ -61,7 +61,7 @@ const MarketplaceComponent: any = ({}) => {
     })
   }
 
-  const [modalData, setModalData] = useState(null)
+  const [modalData, setModalData] = useState<any>(null)
 
   const showDetail = (data: any, index: number, show: boolean) => {
     setModalData({
@@ -111,7 +111,7 @@ const MarketplaceComponent: any = ({}) => {
         </Grid>
       ))}
 
-      {modalData?.show && (
+      {modalData && modalData.show && (
         <OneNftComponent
           data={{
             name: modalData?.name,
